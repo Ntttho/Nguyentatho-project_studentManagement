@@ -7,9 +7,11 @@
 
 int main(int argc, char *argv[]) {
 	struct Student studentList[max];
-	int countStudent = 1; 
+	int countStudent = 0; 
 	struct Classroom classrooms[max];
 	int countClass = 1;
+	struct Teacher teachers[max];
+	int countTeacher = 1;
 	int t=1;
 	while(t){
 		startProgram();
@@ -22,7 +24,7 @@ int main(int argc, char *argv[]) {
 			}
 			case 2:{
 				system("cls");
-				printf("%d\n\n",countStudent);
+				teacherManagement(teachers, &countTeacher);
 				break;
 			}
 			case 3:{

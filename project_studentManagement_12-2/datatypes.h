@@ -25,3 +25,13 @@ struct Classroom{
 	struct Student studentlist[];
 };
 
+struct Teacher{
+	char teacherId[10];
+	char teacherName[25];
+	struct Date dateTeacher;
+	char gender[5];
+	char phoneNumberTeacher[11];
+	char email[30];
+	struct Classroom *classrooms;
+};
+

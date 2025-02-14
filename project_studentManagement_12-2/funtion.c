@@ -12,6 +12,21 @@ void resetCmd() { // xoa bo dem nho nhap enter xoa man hinh cmd
     system("cls");
 }
 
+void menuTeacher(){
+	printf("%7s========Menu Teacher Management========\n","");
+	printf("%7s[1] Show list teacher\n","");
+	printf("%7s[2] Add new teacher\n","");
+	printf("%7s[3] Fix infor of teacher\n","");
+	printf("%7s[4] Delete teacher\n","");
+	printf("%7s[5] Search infor teacher\n","");
+	printf("%7s[6] add new class to teacher\n","");
+	printf("%7s[7] check teacher'inputdata\n","");
+	printf("%7s[8] action with file\n","");
+	printf("%7s[0] Come Back\n","");
+	printf("%7s=======================================\n","");
+};
+
+
 void startProgram(){ 
 	printf("***Student Management System Using C***\n\n");
 	printf("%6s===================================\n","");
@@ -33,6 +48,7 @@ void menuStudentManagement(){
 	printf("[6] soft student follow name\n"); // none				V // sap xep sinh vien theo do dai ten hoac theo anfarB
 	printf("[7] check inputdata to student\n"); // if n == 0		X // kiem tra du lieu sinh vien
 	printf("[8] file'student manipulation \n");//			X // luu thong tin sinh vien vao file bin
+	printf("[0] come back\n");
 	printf("==========================================\n");
 };
 
@@ -78,32 +94,139 @@ void showListStudent(struct Student studentList[], int begin ,int numberOfStuden
 yeu cau nhap lan luot thong tin cua sinh vien V
 sau khi them thanh con in thong bao ra man hinh V
 */
+/*
+do dai thong tin nhap vao phai hop le V
+id != gmail != phone  V
+cac thong tin sinh vien khong duoc de trong V
+du lieu nao khong hop le thi cho nhap lai ngay tuc thoi V
+*/
 void addNewStudent(struct Student *studentList2, int *numberOfStudent2, int check ){
 	// check o day dung de tai su dung cho ham fixinforstudent!!!
+	int i, checkc;
 	printf("====ENTER INFORMATION OF STUDENT====\n");
 	int n = *numberOfStudent2;
+	//id
+
 	if(check != 0){
-		printf("id of student: |%30s",""); scanf("%s",studentList2[n].studentId);
+		checkc=1;
+		while(checkc){
+			printf("id of student: |%30s",""); scanf("%s",studentList2[n].studentId);
+			if(strlen(studentList2[n].studentId) > 10){
+				checkc=1;
+			}else {
+				for( i = 0; i <= n; i++){
+					if(i!=n && strcmp(studentList2[n].studentId, studentList2[i].studentId) == 0){
+						checkc = 1;
+						break;
+					} else {
+						checkc = 0;
+					}
+				}
+			}
+			// kiem tra 
+			if(checkc == 1){
+				printf("erron enter id!\n");
+			}
+		}
 	}
-	printf("classroomId of student: |%21s",""); scanf("%s",studentList2[n].classroomId);
-	printf("name of student: |%28s",""); fflush(stdin); gets(studentList2[n].nameStudent);
-	printf("age of student (date month year) : |%10s",""); scanf("%d %d %d",&studentList2[n].dateStudent.day, &studentList2[n].dateStudent.month, &studentList2[n].dateStudent.year);
-	printf("gender (/1:boy/0:girl/): |%20s",""); scanf("%d",&studentList2[n].intgender); // --> lay ra nam hoac nu 1:nam 0:nu
-	if(studentList2[n].intgender == 1){
-		strcpy(studentList2[n].gender, "boy");
-	}else if(studentList2[n].intgender == 0){
-		strcpy(studentList2[n].gender,"girl");
-	}else{
-		strcpy(studentList2[n].gender,"non");		
+		
+	// id lop (khong duoc dai qua)
+	checkc = 1;
+	while(checkc){
+		printf("classroomId of student: |%21s",""); scanf("%s",studentList2[n].classroomId);
+		if( strlen(studentList2[n].classroomId) > 10){
+			checkc = 1;
+			printf("erron enter class'id!\n");
+		}else checkc = 0;
 	}
-	printf("phonenumber of student: |%21s",""); scanf("%s",studentList2[n].phoneNumberStudent);
-	printf("email of student: |%27s",""); scanf("%s",studentList2[n].email);
+	
+	// name (khong duoc dai qua)
+	checkc = 1;
+	while(checkc){
+		printf("name of student: |%28s",""); fflush(stdin); gets(studentList2[n].nameStudent);
+		if( strlen(studentList2[n].nameStudent) > 25){
+			checkc = 1;
+			printf("erron enter student'name!\n");
+		}else checkc = 0;
+	}
+	//tuoi (khong duoc trong) V
+	checkc = 1;
+	while(checkc){
+		printf("age of student (date month year) : |%10s",""); scanf("%d %d %d",&studentList2[n].dateStudent.day, &studentList2[n].dateStudent.month, &studentList2[n].dateStudent.year);
+		if(studentList2[n].dateStudent.day > 31 || studentList2[n].dateStudent.day < 1 || studentList2[n].dateStudent.month > 12 || studentList2[n].dateStudent.month < 1 || studentList2[n].dateStudent.year < 1950 ||studentList2[n].dateStudent.year > 2025){       
+			checkc = 1;
+			printf("erron birthday!\n");
+		}else {
+			checkc = 0;
+		}
+	}
+	// gioi tinh(khong duoc trong) V
+	checkc = 1;
+	while(checkc){
+		printf("gender (/1:boy/0:girl/): |%20s",""); scanf("%d",&studentList2[n].intgender); // --> lay ra nam hoac nu 1:nam 0:nu
+		if(studentList2[n].intgender == 1){
+			strcpy(studentList2[n].gender, "boy");
+		}else if(studentList2[n].intgender == 0){
+			strcpy(studentList2[n].gender,"girl");
+		}else{
+			strcpy(studentList2[n].gender,"non");
+		}
+		if(strcmp(studentList2[n].gender,"non") == 0){
+			printf("erron gender neutral!\n");
+		}else {
+			checkc = 0;
+		}
+	}
+	//phone ko duoc trung va trong
+	checkc = 1;
+	while(checkc){
+		printf("phonenumber of student: |%21s",""); scanf("%s",studentList2[n].phoneNumberStudent);
+		if(strlen(studentList2[n].phoneNumberStudent) > 10){
+			checkc = 1;
+		}else {
+			for(i = 0; i<= n; i++){
+				if(i!=n && !strcmp(studentList2[i].phoneNumberStudent, studentList2[n].phoneNumberStudent)){
+					checkc=1;
+					
+					break;
+				}else{
+					checkc=0;
+				}
+			}
+		}
+		if(checkc == 1){
+			printf("erron enter phone!\n");
+		}
+		
+	}
+	//gmail ko duoc trung trong
+	checkc = 1;
+	while(checkc){
+		printf("email of student: |%27s",""); scanf("%s",studentList2[n].email);
+		if( strlen(studentList2[n].email) > 30 ){
+			checkc = 1;
+		}else {
+			for(i = 0; i<= n; i++){
+				if(i!=n && !strcmp(studentList2[i].email,studentList2[n].email)){
+					checkc = 1;
+					break;
+				}else {
+					checkc = 0;
+				}
+			}
+		}
+		if(checkc == 1){
+			printf("erron enter email!\n");
+		}
+	}
+	
+	
+	
 	if(check != 0){
 		*numberOfStudent2 += 1;
 	}
 	printf("======successfully entering information of student=====\n");
-	resetCmd();
-	
+	resetCmd();	
 };
 /*
 yeu cau nhap sinh vien muon sua V
@@ -162,7 +285,9 @@ void deleteStudent(struct Student *studentList4, int *numberOfStudent4){
 						break;
 					case 2:
 						printf("you don't confirm that delete student\n");
+						check = 1;
 						break;
+					
 					}
 					break;
 				}
@@ -238,90 +363,8 @@ void searchStudent(struct Student *studentList5, int numberOfStudent5){
 		}
 	} else printf("no student here!...\n");
 };
-/*
-do dai thong tin nhap vao phai hop le V
-id != gmail != phone  V
-cac thong tin sinh vien khong duoc de trong V
-du lieu nao khong hop le thi cho nhap lai ngay tuc thoi V
-*/
-void checkDataStudent(struct Student *studentList7, int numberOfStudent7){
-	int i, n = numberOfStudent7;
-	int check1 = 1;// cac bien check kiem tra du lieu co hop le khong
-	for(i = 0; i < n; i++){ //kiem tra du lieu tung sinh vien
-		printf("check student: |%s|\n",studentList7[i].nameStudent);
-		// kiem tra do dai cua id sinh vien
-		while(strlen(studentList7[i].studentId) > 10 || strlen(studentList7[i].studentId) == 0){
-			printf("[erron] id of |%2s| > 10 charater!\n");
-			printf("re-enter id that:"); scanf("%s",studentList7[i].studentId);
-		}
-		// kiem tra do dai cua ten sinh vien
-		int check2 = 1;
-		while(check2){
-			if(strlen(studentList7[i].nameStudent) > 25 || strlen(studentList7[i].nameStudent) == 0){ // do dai = 0 hoac >25 thi se loi Erron
-				printf("[Erron] lenght student's name!\n");
-				printf("Re-enter student'name: "); fflush(stdin); gets(studentList7[i].nameStudent);
-			}else{
-				check2--;
-			}
-		}
-		//kiem tra ngay sinh sinh vien
-		int check3 = 1;
-		while(check3){
-			int check3_1 = 0, check3_2 = 0;
-			if(studentList7[i].dateStudent.day <= 0 || studentList7[i].dateStudent.day > 31){
-				printf("[Erron] day!\n");
-				printf("Re-enter day of birth: "); scanf("%d", &studentList7[i].dateStudent.day);
-			}
-			if(studentList7[i].dateStudent.month <= 0 || studentList7[i].dateStudent.month > 12){
-				printf("[Erron] month!\n");
-				printf("Re-enter month of birth: "); scanf("%d",&studentList7[i].dateStudent.month);
-			}
-			if(studentList7[i].dateStudent.year < 1900 || studentList7[i].dateStudent.year > 2025){
-				printf("[Erron year!\n]");
-				printf("Re-enter year of birth: "); scanf("%d",&studentList7[i].dateStudent.year);
-			}
-			if(!(studentList7[i].dateStudent.day <= 0 || studentList7[i].dateStudent.day > 31 || studentList7[i].dateStudent.month <= 0 || studentList7[i].dateStudent.month > 12 ||studentList7[i].dateStudent.year < 1900 || studentList7[i].dateStudent.year > 2025)){
-				check3--;
-			}
-		}
-		// kiem tra gioi tinh cua sinh vien
-		while(studentList7[i].gender == "non" || studentList7[i].gender == 0){ // 
-			printf("[Erron] gender of student!\n");
-			printf("Re-enter that (1-boy/0-girl): "); scanf("%d",&studentList7[i].intgender);
-			if(studentList7[i].intgender == 1){
-				strcpy(studentList7[i].gender,"boy");
-			}else if(studentList7[i].intgender){
-				strcpy(studentList7[n].gender,"girl");
-			} else {
-				strcpy(studentList7[n].gender,"non");
-			}
-		}
-		// kiem tra id mail phonenumber co trung nhau hay bo trong hay khong!/// va sua lai
-		int check1 = 1;
-		while(check1){
-			if( !strcmp(studentList7[i].studentId, studentList7[i].phoneNumberStudent) || !strcmp(studentList7[i].studentId, studentList7[i].email) || !strcmp(studentList7[i].email, studentList7[i].phoneNumberStudent)){
-				printf("[Erron] duplicate!\n");
-				printf("+=============+==========+\n");
-				printf("|Id of student|%-10s|\n",studentList7[i].studentId);
-				printf("+=============+==========+\n");
-				printf("Re-enter email of student: "); scanf("%s",studentList7[i].email);
-				printf("Re-enter phonenumber of student: "); scanf("%s",studentList7[i].phoneNumberStudent);
-			}
-			if(studentList7[i].email == 0 || studentList7[i].phoneNumberStudent == 0 ){
-				printf("[Erron] unoccupile\n ");
-			}else {
-				check1--;
-			}
-		}
-		// kiem tra classroom id co bo trong hay khong
-		while(strlen(studentList7[i].classroomId) > 10 || strlen(studentList7[i].classroomId) == 0){
-			printf("[Erron] unoccupile!\n");
-			printf("Re-enter classroom'id: "); scanf("%s",studentList7[i].classroomId);
-		}
-		i++;
-	}
-	resetCmd();
-};
+
+
 /*
 thao tac voi file
 du lieu sinh vien duoc ghi vao file V
@@ -365,9 +408,6 @@ void actionWithFile(struct Student *studentList8, int numberOfStudent8){
 			break;
 		}
 	}
-	
-	
-	
 	resetCmd();
 };
 //======================================================================================//======================================================================================
@@ -431,7 +471,6 @@ void studentManagement(struct Student *students, int *numberOfStudent){
 			}
 			case 7:{
 				system("cls");
-				checkDataStudent(students, *numberOfStudent);
 				break;
 			}
 			case 8:{
@@ -488,7 +527,7 @@ void fixInforClassroom(struct Classroom *classroomList3, int numberOfClass3){
 	char idCheck[10]; int i; int check4 = 0;
 	printf("%30s","Enter classroom'id you want fix: |"); scanf("%s",idCheck);
 	for(i = 0; i < numberOfClass3; i++){
-		if(strcmp(idCheck, classroomList3[i].classroomId)){
+		if(!strcmp(idCheck, classroomList3[i].classroomId)){
 			printf("==========Id here==========\n");
 			printf("+==========+==============================+==============================+=====+===============+\n"); 
 			printf("|%-10s|%-30s|%-30s|%-5s|%-15s|\n","classid","class name","majoy","size","status");
@@ -497,9 +536,9 @@ void fixInforClassroom(struct Classroom *classroomList3, int numberOfClass3){
 			printf("+==========+==============================+==============================+=====+===============+\n"); 
 			int choiceStatus;
 			printf("=============fix==============\n");
-			printf("%-30s|","fix classroom'name:"); fflush(stdin); gets(classroomList3[i].classroomName);
-			printf("%-30s|","fix classroom'majoy:");gets(classroomList3[i].majoy);
-			printf("%-30s|","fix classroom'status(1-active/2-finished):"); scanf("%d",&choiceStatus);
+			printf("%-30s|","fix classroom'name:",""); fflush(stdin); gets(classroomList3[i].classroomName);
+			printf("%-30s|","fix classroom'majoy:","");gets(classroomList3[i].majoy);
+			printf("%-30s|","fix classroom'status(1-active/2-finished):",""); scanf("%d",&choiceStatus);
 			if(choiceStatus == 1){
 				strcpy(classroomList3[i].status,"active");
 			}else if(choiceStatus == 2){
@@ -513,12 +552,45 @@ void fixInforClassroom(struct Classroom *classroomList3, int numberOfClass3){
 	}else{
 		printf("successfully fix that\n"); // sua thanh cong
 	}
-	
-	
 	resetCmd();
 };
 
 void deleteClassroom(struct Classroom *classroomList4, int *numberOfClass4){
+	char idCheck[10];
+	int i, j, check5 = 0 , n = *numberOfClass4;
+	printf("Enter classroom id to delete: "); scanf("%s",idCheck);
+	for(i = 0; i < n; i++){
+		printf("hello");
+		if(!strcmp(idCheck, classroomList4[i].classroomId)){
+			printf("=========id here=========\n");
+			int choiceYN;
+			// xac thuc xoa hay la khong
+			printf("do you want delete that? (1-yes/0-no):  |"); scanf("%d",&choiceYN);
+			if(choiceYN == 0){
+				// neu khong thi khong xoa (khong lam gi ca)
+				check5 = 2;
+				break;
+			} else{
+				for(j = i; j < n; j++){
+					classroomList4[j] = classroomList4[j+1];
+				}
+				*numberOfClass4 = *numberOfClass4 - 1;
+				check5 = 1;
+				break;
+			}
+		}
+	}
+	if(check5 == 0){
+		printf("==========don't id here!=========\n");
+	}else if(check5 == 1){
+		printf("======successfully delete classroom!======\n");
+	}else if(check5 == 2){
+		printf("======not delete classroom!======\n");
+	}
+};
+void showFullInforClassroom(struct Classroom *classroomList5, int *numberOfclass5){
+	char idCheck[10];
+	printf("Enter classroom'id: "); scanf("%s",idCheck);
 	
 };
 
@@ -549,6 +621,11 @@ void classManagement(struct Classroom *classrooms, int *numberOfClass, int *nume
 			}
 			case 4:{
 				system("cls");
+				deleteClassroom(classrooms, &*numberOfClass);
+				break;
+			}
+			case 5:{
+				system("cls");
 				break;
 			}
 			case 0:{
@@ -560,13 +637,112 @@ void classManagement(struct Classroom *classrooms, int *numberOfClass, int *nume
 	}
 };
 
+//======================================================================================//======================================================================================
 
- 
- 
- 
- 
- 
- 
+void showListTeacher(struct Teacher *teachers1, int countTeacher1){
+	int i , n = countTeacher1;
+	if(countTeacher1 == 0){
+		printf("no teacher here!\n");
+	}else {
+		printf("+==========+=========================+===========+==============================+\n");
+		printf("|%-10s|%-25s|%-11s|%-30s|\n","id","name of teacher","phone","email");
+		printf("+==========+=========================+===========+==============================+\n");
+		for(i = 0; i< n; i++){
+			printf("|%-10s|%-25s|%-11s|%-30s|\n",teachers1[i].teacherId,teachers1[i].teacherName,teachers1[i].phoneNumberTeacher,teachers1[i].email);
+			printf("+==========+=========================+===========+==============================+\n");
+		}
+	}
+	resetCmd();
+};
+void addNewTeacher(struct Teacher *teachers2, int *countTeacher2){
+	int i = *countTeacher2;
+	int gender;
+	printf("=====Add New Teacher=====\n");
+	printf("%-30s|","teacher'id:"); scanf("%s",teachers2[i].teacherId);
+	printf("%-30s|","teacher'name:"); fflush(stdin); gets(teachers2[i].teacherName);
+	printf("%-30s|","birthday:"); scanf("%d%d%d",&teachers2[i].dateTeacher.day,&teachers2[i].dateTeacher.month, &teachers2[i].dateTeacher.year);
+	printf("%-30s|","gender (1-boy/2-girl):"); scanf("%d",&gender);
+	if(gender == 1){
+		strcpy(teachers2[i].gender,"boy");
+	}else if(gender == 2){
+		strcpy(teachers2[i].gender,"girl");
+	}
+	printf("%-30s|","teacher'phonenumber"); scanf("%s",teachers2[i].phoneNumberTeacher);
+	printf("%-30s|","teacher'email"); scanf("%s",teachers2[i].email);
+	printf("====successfully enter information of teacher====\n");
+	*countTeacher2 +=1;
+	resetCmd();
+};
+
+void fixInforTeacher(struct Teacher *teachers3, int countTeacher3){
+	int gender;
+	int i, n = countTeacher3;
+	int check7 = 0;
+	char idCheck[10]; printf("Enter id to check teacher: "); scanf("%s",idCheck);
+	for(i = 0; i < n; i++){
+		if(!strcmp(idCheck, teachers3[i].teacherId)){
+			printf("teacher here!\n");
+			printf("+==================================================+\n");
+			printf("|teacher'id: %38s|\n",teachers3[i].teacherId);
+			printf("|teacher'name: %36s|\n",teachers3[i].teacherName);
+			printf("|teacher'birthdays: /%18s%3d/%3d/%4d|\n","",teachers3[i].dateTeacher.day,teachers3[i].dateTeacher.month,teachers3[i].dateTeacher.year);
+			printf("|teacher'gender: %34s|\n",teachers3[i].gender);
+			printf("|teacher'phonenumber: %29s|\n",teachers3[i].phoneNumberTeacher);
+			printf("|teacher'email: %35s|\n",teachers3[i].email);
+			printf("+==================================================+\n\n");
+			printf("|enter teacher'id: %19s|",""); scanf("%s",teachers3[i].teacherId);
+			printf("|enter teacher'name: %17s|",""); fflush(stdin); gets(teachers3[i].teacherName);
+			printf("|enter teacher'birthdays:  %11s|",""); scanf("%d%d%d",&teachers3[i].dateTeacher.day,&teachers3[i].dateTeacher.month, &teachers3[i].dateTeacher.year);
+			printf("|enter teacher'gender(1-boy/2-girl):  |");scanf("%d",&gender);
+			if(gender==1){
+				strcpy(teachers3[i].gender,"boy");
+			}else if(gender==2){
+				strcpy(teachers3[i].gender,"girl");
+			}
+			printf("|enter teacher'phonenumber: %10s|",""); scanf("%s",teachers3[i].phoneNumberTeacher);
+			printf("|enter teacher'email: %16s|","");	scanf("%s",teachers3[i].email);
+			printf("\n\n=====fix successfull=======\n");
+			check7 = 1;
+			break;
+		}
+	}
+	if(check7 == 0){
+		printf("no teacher'id here\n");
+	}
+	resetCmd();
+};
+
+//===================quan ly giao vien==============================
+void teacherManagement(struct Teacher *teachers, int *countTeacher){
+	int t5 = 1;
+	while(t5){
+		menuTeacher();
+		int choice6 = inputChoice(0,9);
+		switch(choice6){
+			case 1:{
+				system("cls");
+				showListTeacher(teachers, *countTeacher);
+				break;
+			}
+			case 2:{
+				system("cls");
+				addNewTeacher(teachers, &*countTeacher);
+				break;
+			}
+			case 3:{
+				system("cls");
+				fixInforTeacher(teachers, *countTeacher);
+				break;
+			}
+			case 0:{
+				system("cls"); 
+				t5--;
+				break;
+			} 
+		}
+	}
+};
+
  
  
  
